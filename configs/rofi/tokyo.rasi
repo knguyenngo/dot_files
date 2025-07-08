@@ -1,0 +1,127 @@
+* {
+font:   "Hack Nerd Font Regular 11";
+
+bg0     : #475258;
+bg1     : #2d353b;
+bg2     : #24283b;
+bg3     : #414868;
+fg0     : #c0caf5;
+fg1     : #d3c6aa;
+fg2     : #737aa2;
+red     : #f7768e;
+green   : #a7c080;
+yellow  : #e0af68;
+blue    : #7aa2f7;
+magenta : #9a7ecc;
+cyan    : #4abaaf;
+
+accent: @green;
+urgent: @yellow;
+
+	background-color : transparent;
+	text-color       : @fg0;
+
+margin  : 0;
+padding : 0;
+spacing : 0;
+}
+
+configuration {
+	show-icons: true;
+	drun-display-format: "{name}";
+	disable-history: false;
+}
+
+element-icon, element-text, scrollbar {
+cursor: pointer;
+}
+
+window {
+location : center;
+width    : 280px;
+	   x-offset : 4px;
+	   y-offset : 26px;
+height   : 262px;
+	   background-color: @bg1;
+border: 1px;
+	border-color: @bg0;
+	border-radius: 6px;
+}
+
+entry {
+placeholder: "Search...";
+	     placeholder-color: @fg2;
+}
+
+inputbar {
+spacing  : 8px;
+padding  : 4px 8px;
+children : [ entry ];
+	   background-color: @bg1;
+border: 0px 0px 1px 0px;
+	border-color: @bg3;
+}
+
+icon-search, entry, element-icon, element-text {
+	vertical-align: 0.5;
+}
+
+icon-search {
+expand   : false;
+filename : "search-symbolic";
+size     : 14px;
+}
+
+textbox {
+padding          : 4px 8px;
+		   background-color : @bg2;
+}
+
+listview {
+padding      : 4px 0px;
+lines        : 12;
+columns      : 1;
+scrollbar    : false;
+	       fixed-height : false;
+dynamic      : true;
+}
+
+element {
+padding : 4px 8px;
+spacing : 8px;
+}
+
+element normal urgent {
+	text-color: @urgent;
+}
+
+element normal active {
+	text-color: @accent;
+}
+
+element alternate active {
+	text-color: @accent;
+}
+
+element selected {
+	text-color       : @bg1;
+	background-color : @accent;
+}
+
+element selected urgent {
+	background-color: @urgent;
+}
+
+element-icon {
+size: 24px;
+}
+
+element-text {
+	text-color: inherit;
+}
+
+scrollbar {
+	handle-width : 2px;
+	handle-color : @green;
+padding      : 0 4px;
+}

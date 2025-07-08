@@ -1,0 +1,14 @@
+/* Increase font size only for Arabic text */
+.cm-content span:has(> span.cm-inline-code:lang(ar)),
+.cm-content span:lang(ar),
+.markdown-preview-view :lang(ar) {
+    font-size: 1.8em;  /* Adjust as needed */
+    line-height: 1.5;  /* Makes diacritics easier to read */
+}
+
+/* Optional: Align Arabic text properly */
+.markdown-preview-view :lang(ar) {
+    direction: rtl;
+    text-align: right;
+}
+

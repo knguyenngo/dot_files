@@ -1,0 +1,26 @@
+/* Confirm Dialog */
+
+* {
+    bg: #2d353b;
+    fg: #c0caf5;
+    bc: #475258;
+    green: #a7c080;
+    background-color:       @bg;
+    text-color:             @fg;
+	font:				 	"Hack Nerd Font 10";
+}
+
+window {
+    width:      			360px;
+    padding:    			25px;
+    border: 1px;
+    border-radius:          6px;
+    border-color:           @green;
+    location:               center;
+    y-offset:               -2em;
+}
+
+entry {
+    expand: 				true;
+    text-color:				@fg;
+}

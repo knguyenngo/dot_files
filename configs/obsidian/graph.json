@@ -1,0 +1,51 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": true,
+  "showOrphans": false,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:\"Akhdari/Section 1/Guarding Limbs\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 16711680
+      }
+    },
+    {
+      "query": "path:\"Akhdari/Section 1\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 65310
+      }
+    },
+    {
+      "query": "path:\"Akhdari/Basic Intro\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 12255487
+      }
+    },
+    {
+      "query": "path:\"Akhdari/Section 2\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 37375
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 0.748727272727273,
+  "lineSizeMultiplier": 1.00436363636364,
+  "collapse-forces": false,
+  "centerStrength": 0,
+  "repelStrength": 5.49758812615956,
+  "linkStrength": 1,
+  "linkDistance": 300,
+  "scale": 0.387829289266823,
+  "close": true
+}

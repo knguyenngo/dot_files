@@ -1,0 +1,18 @@
+{
+  "templater-obsidian:00 Templates/arabic-span.md": [
+    {
+      "modifiers": [
+        "Shift"
+      ],
+      "key": "`"
+    }
+  ],
+  "templater-obsidian:00 - Templates/arabic-span.md": [
+    {
+      "modifiers": [
+        "Shift"
+      ],
+      "key": "`"
+    }
+  ]
+}
