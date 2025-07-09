@@ -44,6 +44,7 @@ ip addr show
 10. `unzip`: unzipping `.zip`
 11. `yay`: install anything not available with `pacman`
 12. `ncdu`: manage storage (should use with `sudo` to access all directories)
+13. `fuse`: required for `obsidian`
 
 ---
 ## Useful Commands
@@ -58,7 +59,7 @@ xmodmap -pke
 ```
 3. for auto-starting HDMI screen on startup (should be used in `i3/config`):
 ```sh
-xrandr --output HDMI-1-0 --auto --right-of eDP-1 --output eDP-1
+xrandr --output HDMI-1-0 --auto --left-of eDP-1 --output eDP-1
 ```
 
 ---
@@ -122,7 +123,7 @@ ssh -T git@github.com
 ## Setting Up App Images
 
 1. Create `applications` directory inside of `$HOME/.local/share`, all `.desktop` files will be placed here
-2. Create `app.desktop file`
+2. Create `app.desktop` file
 ```sh
 [Desktop Entry]
 Name=app_name
