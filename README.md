@@ -27,7 +27,6 @@ ip addr show
 9. `Xmodmap`: keyboard mappings config
 10. `fonts/Hack`: font for system
 11. `fonts/Feather`: include icons needed for `polybar` config
-12. `fonts/KSARegular`: needed for Arabic support in `obsidian`
 
 ---
 ## Useful Apps
@@ -45,6 +44,7 @@ ip addr show
 11. `yay`: install anything not available with `pacman`
 12. `ncdu`: manage storage (should use with `sudo` to access all directories)
 13. `fuse`: required for `obsidian`
+14. `autotiling`: automatic tiling when opening new windows
 
 ---
 ## Useful Commands
