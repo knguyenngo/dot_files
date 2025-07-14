@@ -120,6 +120,22 @@ ssh -T git@github.com
 9. Successful authentication screen will show if everything was done correctly
 
 ---
+## Connect to Desktop via SSH
+
+1. Run SSH command
+```sh
+sudo systemctl start sshd
+```
+2. Copy files/folders from Desktop to Laptop
+```sh
+scp -r user@ip:/path/to/folder ./destination
+```
+3. Stop server
+```sh
+sudo systemctl stop sshd
+```
+
+---
 ## Setting Up App Images
 
 1. Create `applications` directory inside of `$HOME/.local/share`, all `.desktop` files will be placed here
