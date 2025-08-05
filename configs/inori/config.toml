@@ -1,0 +1,10 @@
+[keybindings]
+up = ["<up>"]
+down = ["<down>"]
+left = ["<left>"]
+right = ["<right>"]
+top = ["g g"]
+bottom = ["G"]
+
+seek = ["]"]
+seek_backwards = ["["]
