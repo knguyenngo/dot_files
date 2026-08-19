@@ -151,6 +151,61 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
+-- Split creation / resize / close
+vim.keymap.set("n", "<leader>wv", "<C-w>v", { desc = "[W]indow split [v]ertical" })
+vim.keymap.set("n", "<leader>ws", "<C-w>s", { desc = "[W]indow [s]plit horizontal" })
+vim.keymap.set("n", "<leader>wc", "<C-w>c", { desc = "[W]indow [c]lose" })
+vim.keymap.set("n", "<leader>wo", "<C-w>o", { desc = "[W]indow close [o]thers" })
+vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase window width" })
+
+-- Lazygit in a floating terminal
+local lazygit_buf = nil
+vim.keymap.set("n", "<leader>gg", function()
+	if lazygit_buf and vim.api.nvim_buf_is_valid(lazygit_buf) then
+		vim.cmd("buffer " .. lazygit_buf)
+	else
+		vim.cmd("terminal lazygit")
+		lazygit_buf = vim.api.nvim_get_current_buf()
+		vim.cmd("startinsert")
+		vim.api.nvim_buf_set_option(lazygit_buf, "bufhidden", "hide")
+		vim.keymap.set("t", "<Esc>", "<C-\\><C-n>:close<CR>", { buffer = lazygit_buf })
+	end
+	local width = math.floor(vim.o.columns * 0.9)
+	local height = math.floor(vim.o.lines * 0.9)
+	vim.api.nvim_open_win(vim.api.nvim_get_current_buf(), true, {
+		relative = "editor",
+		width = width,
+		height = height,
+		col = math.floor((vim.o.columns - width) / 2),
+		row = math.floor((vim.o.lines - height) / 2),
+		border = "rounded",
+	})
+	vim.cmd("startinsert")
+end, { desc = "[G]it [G]ui (lazygit)" })
+
+-- Integrated terminal in a bottom split: <C-\> toggles, <Esc> leaves terminal mode
+local term_buf, term_win = nil, nil
+vim.keymap.set({ "n", "t" }, "<C-\\>", function()
+	if term_win and vim.api.nvim_win_is_valid(term_win) then
+		vim.api.nvim_win_hide(term_win)
+		term_win = nil
+		return
+	end
+	vim.cmd("botright " .. math.floor(vim.o.lines * 0.3) .. "split")
+	term_win = vim.api.nvim_get_current_win()
+	if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+		vim.api.nvim_win_set_buf(term_win, term_buf)
+	else
+		vim.cmd("terminal")
+		term_buf = vim.api.nvim_get_current_buf()
+		vim.bo[term_buf].bufhidden = "hide"
+	end
+	vim.cmd("startinsert")
+end, { desc = "Toggle terminal" })
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -299,6 +354,10 @@ require("lazy").setup({
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>t", group = "[T]oggle" },
 				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+				{ "<leader>g", group = "[G]it" },
+				{ "<leader>w", group = "[W]indow" },
+				{ "<leader>q", group = "Session / [Q]uickfix" },
+				{ "<leader>c", group = "[C]ode" },
 			},
 		},
 	},
@@ -644,7 +703,10 @@ require("lazy").setup({
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
-				-- ts_ls = {},
+				ts_ls = {},
+				gopls = {},
+				pyright = {},
+				rust_analyzer = {},
 				--
 
 				lua_ls = {
@@ -679,6 +741,10 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"prettierd", -- Used to format JS/TS
+				"eslint_d", -- Used to lint JS/TS
+				"ruff", -- Used to lint + format Python
+				"goimports", -- Used to format Go
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -735,7 +801,15 @@ require("lazy").setup({
 				-- python = { "isort", "black" },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
-				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+				javascript = { "prettierd", "prettier", stop_after_first = true },
+				javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+				typescript = { "prettierd", "prettier", stop_after_first = true },
+				typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+				json = { "prettierd", "prettier", stop_after_first = true },
+				yaml = { "prettierd", "prettier", stop_after_first = true },
+				python = { "ruff_fix", "ruff_format" },
+				go = { "goimports" },
+				-- rust uses rust_analyzer via the lsp_format fallback
 			},
 		},
 	},
@@ -798,7 +872,7 @@ require("lazy").setup({
 				-- <c-k>: Toggle signature help
 				--
 				-- See :h blink-cmp-config-keymap for defining your own keymap
-				preset = "default",
+				preset = "enter",
 
 				-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
 				--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -813,7 +887,8 @@ require("lazy").setup({
 			completion = {
 				-- By default, you may press `<c-space>` to show the documentation.
 				-- Optionally, set `auto_show = true` to show the documentation after a delay.
-				documentation = { auto_show = false, auto_show_delay_ms = 500 },
+				documentation = { auto_show = true, auto_show_delay_ms = 200 },
+				ghost_text = { enabled = true },
 			},
 
 			sources = {
@@ -905,44 +980,6 @@ require("lazy").setup({
 			--  Check out: https://github.com/echasnovski/mini.nvim
 		end,
 	},
-	{ -- Highlight, edit, and navigate code
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-		main = "nvim-treesitter.configs", -- Sets main module to use for opts
-		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-		opts = {
-			ensure_installed = {
-				"bash",
-				"c",
-				"diff",
-				"html",
-				"lua",
-				"luadoc",
-				"markdown",
-				"markdown_inline",
-				"query",
-				"vim",
-				"vimdoc",
-				"gitignore",
-			},
-			-- Autoinstall languages that are not installed
-			auto_install = true,
-			highlight = {
-				enable = true,
-				-- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-				--  If you are experiencing weird indenting issues, add the language to
-				--  the list of additional_vim_regex_highlighting and disabled languages for indent.
-				additional_vim_regex_highlighting = { "ruby" },
-			},
-			indent = { enable = true, disable = { "ruby" } },
-		},
-		-- There are additional nvim-treesitter modules that you can use to interact
-		-- with nvim-treesitter. You should go explore a few and see what interests you:
-		--
-		--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-		--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-		--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-	},
 
 	-- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
 	-- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -953,12 +990,12 @@ require("lazy").setup({
 	--  Here are some example plugins that I've included in the Kickstart repository.
 	--  Uncomment any of the lines below to enable them (you will need to restart nvim).
 	--
-	-- require 'kickstart.plugins.debug',
-	-- require 'kickstart.plugins.indent_line',
-	-- require 'kickstart.plugins.lint',
-	-- require 'kickstart.plugins.autopairs',
+	require 'kickstart.plugins.debug',
+	require 'kickstart.plugins.indent_line',
+	require 'kickstart.plugins.lint',
+	require 'kickstart.plugins.autopairs',
 	-- require 'kickstart.plugins.neo-tree',
-	-- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+	require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
 	-- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
 	--    This is the easiest way to modularize your config.
